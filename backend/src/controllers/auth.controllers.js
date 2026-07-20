@@ -1,5 +1,6 @@
 import prisma from "../config/prisma.js";  
 import bcrypt from "bcryptjs";
+import {generateToken} from "../lib/utils.js";
 
 export async function signup(req,res) {
     const { username, email, password } = req.body;
