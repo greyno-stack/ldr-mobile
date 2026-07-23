@@ -5,3 +5,13 @@ Test
 - npm run android
 - npm run ios
 - npm run web
+
+git fetch origin
+git checkout main
+git reset --hard origin/main
+git clean -fd
+
+npx expo start
+npm start
+
+https://youtu.be/vk13GJi4Vd0?t=6041
