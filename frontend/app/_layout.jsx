@@ -1,13 +1,12 @@
-import { Stack } from "expo-router";
-import { View, Text } from "react-native";
-import SafeScreen from "../components/SafeScreen";
+// app/_layout.jsx
+import { Slot } from 'expo-router';
+import SafeScreen from '../components/SafeScreen';
 
 export default function RootLayout() {
   return (
-    <View>
-      <SafeScreen>
-        <Text>Hello, World!</Text>
-      </SafeScreen>
-    </View>
+    <SafeScreen>
+      <Slot />
+    </SafeScreen>
   );
 }
+
