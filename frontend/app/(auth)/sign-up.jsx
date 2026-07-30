@@ -21,7 +21,7 @@ export default function SignUp() {
       return;
     }
 
-    signup({ fullName, email, password });
+    signup({ username: fullName, email, password });
   };
 
   return (

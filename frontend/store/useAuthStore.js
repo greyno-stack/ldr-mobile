@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
+import Toast from "react-native-toast-message";
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -26,6 +27,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/auth/signup", data);
             set({authUser: res.data});
+            console.log("Signup successful:", res.data);
         }
         catch (error) {
             const message =
@@ -33,6 +35,15 @@ export const useAuthStore = create((set, get) => ({
               error?.response?.data?.message ||
               error?.message ||
               "Signup failed";
+            if (status === 409 || message.toLowerCase().includes("already")) {
+                Toast.show({
+                type: "error",
+                text1: "Email already in use",
+                text2: "Try signing in instead, or use a different email.",
+            });
+            } else {
+                Toast.show({ type: "error", text1: message });
+            }
             console.error("Error signing up:", error);
         }
         finally {
