@@ -11,6 +11,9 @@ git checkout main
 git reset --hard origin/main
 git clean -fd
 
+git checkout main
+git pull origin main
+
 npx expo start
 npm start
 
