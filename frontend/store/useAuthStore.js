@@ -56,11 +56,25 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/auth/login", data);
             set({ authUser: res.data });
-
+            Toast.show({ type: "success", text1: "Logged in successfully" });
+            return true;
             // get().connectSocket();
         } catch (error) {
+            const message =
+              error?.response?.data?.error ||
+              error?.response?.data?.message ||
+              error?.message ||
+              "Sign in failed";
+            if (status === 401) {
+                Toast.show({type: "error", text1: "Invalid email or password",
+            });
+            } else {
+                Toast.show({ type: "error", text1: message });
+            }
             console.error("Error logging in:", error);
-        } finally {
+            return false;
+        }
+        finally {
             set({ isLoggingIn: false });
         }
     },

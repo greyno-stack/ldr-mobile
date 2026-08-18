@@ -1,11 +1,14 @@
 // app/(auth)/sign-up.jsx
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useAuthStore } from '../../store/useAuthStore';
+import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUp() {
   const { signup, isSigningUp } = useAuthStore();
+  const router = useRouter();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,10 +17,7 @@ export default function SignUp() {
 
   const handleSignUp = () => {
     if (password !== confirmPassword) {
-      // you're using react-hot-toast in the store, but that's web-only —
-      // for RN you'll want something like react-native-toast-message instead.
-      // For now, just a simple guard:
-      console.warn('Passwords do not match');
+      Toast.show({ type: 'error', text1: "Passwords don't match" });
       return;
     }
 
@@ -30,6 +30,10 @@ export default function SignUp() {
       style={styles.backgroundImage}
       imageStyle={styles.backgroundImageStyle}
     >
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={24} color="#475569" />
+      </TouchableOpacity>
+
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.appTitle}>LDR</Text>
@@ -41,7 +45,7 @@ export default function SignUp() {
           <View style={styles.field}>
             <Text style={styles.label}>Full name</Text>
             <TextInput
-              placeholder="Jamie Rivera"
+              placeholder="Your full name"
               value={fullName}
               onChangeText={setFullName}
               style={styles.input}
@@ -51,7 +55,7 @@ export default function SignUp() {
           <View style={styles.field}>
             <Text style={styles.label}>Email</Text>
             <TextInput
-              placeholder="name@example.com"
+              placeholder="Your email"
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -63,7 +67,7 @@ export default function SignUp() {
           <View style={styles.field}>
             <Text style={styles.label}>Password</Text>
             <TextInput
-              placeholder="••••••••"
+              placeholder="Your password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -74,7 +78,7 @@ export default function SignUp() {
           <View style={styles.field}>
             <Text style={styles.label}>Confirm password</Text>
             <TextInput
-              placeholder="••••••••"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry
@@ -126,6 +130,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 14,
     backgroundColor: 'rgba(255,255,255,0.9)',
+  },
+  backButton: {
+    marginBottom: 12,
+    alignSelf: 'flex-start',
   },
   primaryButton: {
     height: 48,
