@@ -31,11 +31,12 @@ export async function signup(req,res) {
             },
         });
         if(newUser) {
-            generateToken(newUser.id, res);
+            const token = generateToken(newUser.id, res);
             res.status(201).json({
                 id: newUser.id,
                 username: newUser.username,
                 email: newUser.email,
+                token,
                 password: newUser.password,
                 createdAt: newUser.createdAt
             });
@@ -64,11 +65,12 @@ export async function login(req,res) {
             return res.status(400).json({ error: "Invalid email or password" });
         }
         
-        generateToken(existingUser.id, res);
+        const token = generateToken(existingUser.id, res);
         console.log("User logged in successfully");
         res.status(200).json({
             username: existingUser.username,
             email: existingUser.email,
+            token,
             password: existingUser.password
         });
     } catch (error) {

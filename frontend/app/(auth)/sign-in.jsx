@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -17,11 +17,12 @@ export default function SignIn() {
     }
   };
   return (
-    <ImageBackground
-      source={require('../../assets/images/stargazer.png')}
-      style={styles.backgroundImage}
-      imageStyle={styles.backgroundImageStyle}
-    >
+    <View style={styles.screen}>
+      <Image
+        source={require('../../assets/images/stargazer.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.appTitle}>LDR</Text>
@@ -54,7 +55,7 @@ export default function SignIn() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.primaryButton}
+        <TouchableOpacity
           style={[styles.primaryButton, isLoggingIn && styles.disabledButton]}
           onPress={handleSignIn}
           disabled={isLoggingIn}
@@ -69,14 +70,14 @@ export default function SignIn() {
           <Link href="/sign-up" style={styles.footerLink}>Sign up</Link>
         </Text>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   disabledButton: { opacity: 0.6 },
-  backgroundImage: { flex: 1, width: '100%', height: '100%' },
-  backgroundImageStyle: { resizeMode: 'cover' },
+  screen: { flex: 1 },
+  backgroundImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%' },
   container: {
     flex: 1,
     padding: 24,

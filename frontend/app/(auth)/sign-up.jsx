@@ -28,7 +28,7 @@ export default function SignUp() {
     <ImageBackground
       source={require('../../assets/images/stargazer.png')}
       style={styles.backgroundImage}
-      imageStyle={styles.backgroundImageStyle}
+        resizeMode="cover"
     >
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={24} color="#475569" />
@@ -108,7 +108,6 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   backgroundImage: { flex: 1, width: '100%', height: '100%' },
-  backgroundImageStyle: { resizeMode: 'cover' },
   container: {
     flex: 1,
     padding: 24,

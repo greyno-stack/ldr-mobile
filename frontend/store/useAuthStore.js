@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstance } from "../lib/axios.js";
+import { axiosInstance, setAuthToken } from "../lib/axios.js";
 import Toast from "react-native-toast-message";
 
 export const useAuthStore = create((set, get) => ({
@@ -26,6 +26,7 @@ export const useAuthStore = create((set, get) => ({
         set({isSigningUp: true});
         try {
             const res = await axiosInstance.post("/auth/signup", data);
+            setAuthToken(res.data.token);
             set({authUser: res.data});
             console.log("Signup successful:", res.data);
         }
@@ -55,6 +56,7 @@ export const useAuthStore = create((set, get) => ({
         set({ isLoggingIn: true });
         try {
             const res = await axiosInstance.post("/auth/login", data);
+            setAuthToken(res.data.token);
             set({ authUser: res.data });
             Toast.show({ type: "success", text1: "Logged in successfully" });
             return true;
@@ -83,6 +85,7 @@ export const useAuthStore = create((set, get) => ({
     logout: async(username) => {
         try {
             await axiosInstance.post("/auth/logout");
+            setAuthToken(null);
             set({ authUser: null });
             // get().disconnectSocket();
         }

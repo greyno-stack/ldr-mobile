@@ -18,7 +18,6 @@ model User {
   password         String
   createdAt        DateTime  @default(now())
 
-<<<<<<< HEAD
   coupleAsUser1    Couple?   @relation("User1Couple")
   coupleAsUser2    Couple?   @relation("User2Couple")
 
@@ -32,8 +31,8 @@ enum CoupleStatus {
 
 model Couple {
   id          String       @id @default(uuid())
-  user1Id     String
-  user2Id     String
+  user1Id     Int          @unique
+  user2Id     Int          @unique
   user1       User         @relation("User1Couple", fields: [user1Id], references: [id])
   user2       User         @relation("User2Couple", fields: [user2Id], references: [id])
   status      CoupleStatus @default(ACTIVE)
@@ -47,42 +46,9 @@ model Couple {
 model PairingInvite {
   id          String   @id @default(uuid())
   code        String   @unique
-  ownerId     String   @unique
-  owner       User     @relation("InviteOwner", fields: [ownerId], references: [id])
-  createdAt   DateTime @default(now())
-  expiresAt   DateTime?
-=======
-  coupleAsUser1 Couple[] @relation("User1Couple")
-  coupleAsUser2 Couple[] @relation("User2Couple")
-
-  invite        PairingInvite? @relation("InviteOwner")
->>>>>>> 7f60b0855aa71939984e0239e84e47e5f78e73f4
-}
-
-enum CoupleStatus {
-  ACTIVE
-  UNPAIRED
-}
-
-model Couple {
-  id          String       @id @default(uuid())
-  user1Id     Int
-  user2Id     Int
-  user1       User         @relation("User1Couple", fields: [user1Id], references: [id])
-  user2       User         @relation("User2Couple", fields: [user2Id], references: [id])
-  status      CoupleStatus @default(ACTIVE)
-  createdAt   DateTime     @default(now())
-  unpairedAt  DateTime?
-  unpairedBy  Int?         // userId of whoever initiated the unpair
-
-  @@unique([user1Id, user2Id])
-}
-
-model PairingInvite {
-  id          String   @id @default(uuid())
-  code        String   @unique
   ownerId     Int      @unique
   owner       User     @relation("InviteOwner", fields: [ownerId], references: [id])
   createdAt   DateTime @default(now())
   expiresAt   DateTime?
 }
+
