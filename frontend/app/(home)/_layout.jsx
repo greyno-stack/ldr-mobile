@@ -1,5 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 export default function HomeLayout() {
   return (
@@ -24,7 +26,7 @@ export default function HomeLayout() {
         options={{
           title: 'Partner',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" size={size} color={color} />
+            <FontAwesomeIcon icon={faHeart} size={24} color="#378ADD" />
           ),
         }}
       />

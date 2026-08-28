@@ -22,7 +22,7 @@ export const getPairingStatus = async (req, res) => {
 
     res.status(200).json({
       paired: true,
-      partner: { id: partner.id, fullName: partner.fullName, email: partner.email },
+      partner: { id: partner.id, username: partner.username, email: partner.email },
       since: couple.createdAt,
     });
   } catch (error) {

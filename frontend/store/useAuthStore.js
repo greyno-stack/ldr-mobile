@@ -31,6 +31,7 @@ export const useAuthStore = create((set, get) => ({
             console.log("Signup successful:", res.data);
         }
         catch (error) {
+            const status = error?.response?.status;
             const message =
               error?.response?.data?.error ||
               error?.response?.data?.message ||
@@ -62,6 +63,7 @@ export const useAuthStore = create((set, get) => ({
             return true;
             // get().connectSocket();
         } catch (error) {
+            const status = error?.response?.status;
             const message =
               error?.response?.data?.error ||
               error?.response?.data?.message ||
