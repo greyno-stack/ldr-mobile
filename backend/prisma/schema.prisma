@@ -38,9 +38,19 @@ model Couple {
   status      CoupleStatus @default(ACTIVE)
   createdAt   DateTime     @default(now())
   unpairedAt  DateTime?
-  unpairedBy  String?      // userId of whoever initiated the unpair
+  unpairedBy  Int?
 
-  @@unique([user1Id, user2Id])
+  countdown   Countdown?
+}
+
+model Countdown {
+  id          String   @id @default(uuid())
+  coupleId    String   @unique
+  couple      Couple   @relation(fields: [coupleId], references: [id])
+  title       String?
+  targetDate  DateTime
+  createdAt   DateTime @default(now())
+  createdBy   String
 }
 
 model PairingInvite {
