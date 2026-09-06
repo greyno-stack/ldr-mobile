@@ -63,7 +63,7 @@ export const createCountdown = async (req, res) => {
         coupleId: couple.id,
         targetDate: parsedDate,
         title: title ?? null,
-        createdBy: userId,
+        createdBy: String(userId),
       },
     });
 

@@ -1,13 +1,27 @@
 // app/_layout.jsx
+import { useEffect } from 'react';
 import { Slot } from 'expo-router';
 import SafeScreen from '../components/SafeScreen';
 import Toast from 'react-native-toast-message';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { useAuthStore } from '../store/useAuthStore';
 
 export default function RootLayout() {
+  const { isCheckingAuth, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   const content = (
     <SafeScreen>
-      <Slot />
+      {isCheckingAuth ? (
+        <View style={styles.loading}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <Slot />
+      )}
       <Toast />
     </SafeScreen>
   );
@@ -25,6 +39,11 @@ const styles = StyleSheet.create({
     maxWidth: 430,
     marginHorizontal: 'auto',
     width: '100%',
-    height: '100vh',  
+    height: '100vh',
+  },
+  loading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

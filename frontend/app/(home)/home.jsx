@@ -1,19 +1,33 @@
 import { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCountdownStore } from '../../store/useCountdownStore';
+import { usePairingStore } from '../../store/usePairingStore';
+import ScreenBackground from '../../components/ScreenBackground';
 import CountdownCard from '../../components/Countdown/CountdownCard';
 import AddCountdownButton from '../../components/Countdown/AddCountdownButton';
 
 export default function Home() {
   const { authUser } = useAuthStore();
   const { countdown, getCountdown, createCountdown } = useCountdownStore();
+  const { paired, getStatus } = usePairingStore();
 
   useEffect(() => {
-    getCountdown();
+    getStatus();
   }, []);
 
+  useEffect(() => {
+    if (paired) {
+      getCountdown();
+    }
+  }, [paired]);
+
   const handleAddCountdown = () => {
+    if (!paired) {
+      Toast.show({ type: 'error', text1: 'Unable to add countdown, find a partner first' });
+      return;
+    }
     // placeholder for now — next step is a date picker modal
     createCountdown({
       targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
@@ -21,9 +35,9 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenBackground style={styles.container}>
       <Text style={styles.greeting}>
-        Welcome back{authUser?.fullName ? `, ${authUser.fullName}` : ''}
+        Welcome back{authUser?.username ? `, ${authUser.username}` : ''}
       </Text>
 
       {countdown ? (
@@ -31,11 +45,18 @@ export default function Home() {
       ) : (
         <AddCountdownButton onPress={handleAddCountdown} />
       )}
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, paddingTop: 60, backgroundColor: '#fff', gap: 20 },
-  greeting: { fontSize: 22, fontWeight: '600' },
+  container: { padding: 24, paddingTop: 60, gap: 20 },
+  greeting: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#fff',
+    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
 });

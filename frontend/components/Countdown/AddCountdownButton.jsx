@@ -14,12 +14,13 @@ const styles = StyleSheet.create({
   box: {
     height: 100,
     borderWidth: 1.5,
-    borderColor: '#c0c0c0',
+    borderColor: 'rgba(255,255,255,0.7)',
     borderStyle: 'dashed',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
+    backgroundColor: 'rgba(255,255,255,0.5)',
   },
   text: {
     fontSize: 14,

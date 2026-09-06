@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { usePairingStore } from '../../store/usePairingStore';
+import { useAuthStore } from '../../store/useAuthStore';
+import ScreenBackground from '../../components/ScreenBackground';
 
 export default function Partner() {
+  const { authUser } = useAuthStore();
   const {
     paired, partner, isLoadingStatus,
     inviteCode, isLoadingInvite,
@@ -29,20 +32,20 @@ export default function Partner() {
 
   if (isLoadingStatus) {
     return (
-      <View style={styles.container}>
+      <ScreenBackground style={styles.container}>
         <ActivityIndicator />
-      </View>
+      </ScreenBackground>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ScreenBackground style={styles.container}>
       <Text style={styles.title}>Partner</Text>
 
       {paired ? (
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Your pairing</Text>
-          <Text style={styles.cardSubtitle}>{partner?.fullName}</Text>
+          <Text style={styles.cardSubtitle}>{authUser?.username} and {partner?.username}</Text>
         </View>
       ) : (
         <>
@@ -77,19 +80,27 @@ export default function Partner() {
           </View>
         </>
       )}
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, paddingTop: 60, backgroundColor: '#fff', gap: 16 },
-  title: { fontSize: 22, fontWeight: '600' },
+  container: { padding: 24, paddingTop: 60, gap: 16 },
+  title: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#fff',
+    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
   card: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: 'rgba(255,255,255,0.6)',
     borderRadius: 12,
     padding: 16,
     gap: 8,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   cardTitle: { fontSize: 14, color: '#8a8a8a' },
   cardSubtitle: { fontSize: 16, fontWeight: '500' },
@@ -102,6 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     fontSize: 14,
+    backgroundColor: 'rgba(255,255,255,0.9)',
   },
   joinButton: {
     height: 44,

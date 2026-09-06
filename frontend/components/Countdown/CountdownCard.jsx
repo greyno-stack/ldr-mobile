@@ -31,10 +31,11 @@ export default function CountdownCard({ countdown }) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: 'rgba(255,255,255,0.6)',
     borderRadius: 12,
     padding: 16,
     gap: 8,
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   title: {
     fontSize: 13,

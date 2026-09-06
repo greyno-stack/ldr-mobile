@@ -89,10 +89,18 @@ export const logout = (req, res) => {
     }
 };
 
-export const checkAuth = (req, res) => {
+export const checkAuth = async (req, res) => {
   try {
-    console.log(req.user);
-    res.status(200).json(req.user);
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { id: true, username: true, email: true },
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
   }
   catch (error) {
     console.log(error);

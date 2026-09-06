@@ -1,23 +1,30 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export default function HomeLayout() {
+  const { authUser } = useAuthStore();
+
+  if (!authUser) {
+    return <Redirect href="/sign-in" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#378ADD',
         tabBarInactiveTintColor: '#8a8a8a',
+        tabBarShowLabel: false,
+        tabBarStyle: { backgroundColor: 'rgba(255,255,255,0.92)' },
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
           ),
         }}
       />
@@ -25,8 +32,8 @@ export default function HomeLayout() {
         name="partner"
         options={{
           title: 'Partner',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={faHeart} size={24} color="#378ADD" />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={size} color={color} />
           ),
         }}
       />
@@ -34,8 +41,8 @@ export default function HomeLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
           ),
         }}
       />

@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../store/useAuthStore';
+import ScreenBackground from '../../components/ScreenBackground';
 
 export default function Settings() {
   const { logout, authUser } = useAuthStore();
@@ -12,19 +13,27 @@ export default function Settings() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenBackground style={styles.container}>
       <Text style={styles.title}>Settings</Text>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Log out</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, paddingTop: 60, backgroundColor: '#fff' },
-  title: { fontSize: 22, fontWeight: '600', marginBottom: 24 },
+  container: { padding: 24, paddingTop: 60 },
+  title: {
+    fontSize: 22,
+    fontWeight: '600',
+    marginBottom: 24,
+    color: '#fff',
+    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
   logoutButton: {
     height: 48,
     borderRadius: 8,
@@ -32,6 +41,7 @@ const styles = StyleSheet.create({
     borderColor: '#e0393e',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   logoutText: { color: '#e0393e', fontSize: 15, fontWeight: '600' },
 });
