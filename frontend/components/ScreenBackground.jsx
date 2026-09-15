@@ -4,7 +4,7 @@ export default function ScreenBackground({ children, style }) {
   return (
     <View style={styles.screen}>
       <Image
-        source={require('../assets/images/lake1.png')}
+        source={require('../assets/images/cat_city.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />

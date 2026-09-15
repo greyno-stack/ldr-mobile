@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { usePairingStore } from '../../store/usePairingStore';
-import { useAuthStore } from '../../store/useAuthStore';
 import ScreenBackground from '../../components/ScreenBackground';
+import ActionCard from '../../components/Partner/ActionCard';
 
 export default function Partner() {
-  const { authUser } = useAuthStore();
   const {
-    paired, partner, isLoadingStatus,
+    paired, isLoadingStatus,
     inviteCode, isLoadingInvite,
     isJoining,
     getStatus, getInviteCode, joinWithCode,
@@ -30,6 +30,14 @@ export default function Partner() {
     joinWithCode(joinCode.trim().toUpperCase());
   };
 
+  const handleSendAffection = () => {
+    Toast.show({ type: 'info', text1: 'Coming soon', text2: 'Sending affection isn\'t wired up yet' });
+  };
+
+  const handleSendNote = () => {
+    Toast.show({ type: 'info', text1: 'Coming soon', text2: 'Sending notes isn\'t wired up yet' });
+  };
+
   if (isLoadingStatus) {
     return (
       <ScreenBackground style={styles.container}>
@@ -43,9 +51,19 @@ export default function Partner() {
       <Text style={styles.title}>Partner</Text>
 
       {paired ? (
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Your pairing</Text>
-          <Text style={styles.cardSubtitle}>{authUser?.username} and {partner?.username}</Text>
+        <View style={styles.actions}>
+          <ActionCard
+            icon="heart-outline"
+            title="Send affection"
+            description="A kiss, a hug, or a wink"
+            onPress={handleSendAffection}
+          />
+          <ActionCard
+            icon="mail-outline"
+            title="Send a note"
+            description="Share a quick thought or message"
+            onPress={handleSendNote}
+          />
         </View>
       ) : (
         <>
@@ -103,8 +121,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.85)',
   },
   cardTitle: { fontSize: 14, color: '#8a8a8a' },
-  cardSubtitle: { fontSize: 16, fontWeight: '500' },
   cardHint: { fontSize: 12, color: '#8a8a8a' },
+  actions: { gap: 12 },
   code: { fontSize: 28, fontWeight: '700', letterSpacing: 2 },
   input: {
     height: 44,
