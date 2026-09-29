@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { usePairingStore } from '../../store/usePairingStore';
+import { useNoteStore } from '../../store/useNoteStore';
+import { usePresenceStore } from '../../store/usePresenceStore';
 import ScreenBackground from '../../components/ScreenBackground';
 import ActionCard from '../../components/Partner/ActionCard';
+import SendNoteModal from '../../components/Partner/SendNoteModal';
+import StatusBadge from '../../components/Partner/StatusBadge';
 
 export default function Partner() {
   const {
@@ -12,8 +16,11 @@ export default function Partner() {
     isJoining,
     getStatus, getInviteCode, joinWithCode,
   } = usePairingStore();
+  const { sendNote, isSending } = useNoteStore();
+  const { partnerStatus } = usePresenceStore();
 
   const [joinCode, setJoinCode] = useState('');
+  const [noteModalVisible, setNoteModalVisible] = useState(false);
 
   useEffect(() => {
     getStatus();
@@ -35,7 +42,14 @@ export default function Partner() {
   };
 
   const handleSendNote = () => {
-    Toast.show({ type: 'info', text1: 'Coming soon', text2: 'Sending notes isn\'t wired up yet' });
+    setNoteModalVisible(true);
+  };
+
+  const handleNoteSend = async (text) => {
+    const success = await sendNote(text);
+    if (success) {
+      setNoteModalVisible(false);
+    }
   };
 
   if (isLoadingStatus) {
@@ -48,7 +62,10 @@ export default function Partner() {
 
   return (
     <ScreenBackground style={styles.container}>
-      <Text style={styles.title}>Partner</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>Partner</Text>
+        {paired ? <StatusBadge status={partnerStatus} /> : null}
+      </View>
 
       {paired ? (
         <View style={styles.actions}>
@@ -98,12 +115,24 @@ export default function Partner() {
           </View>
         </>
       )}
+
+      <SendNoteModal
+        visible={noteModalVisible}
+        onClose={() => setNoteModalVisible(false)}
+        onSend={handleNoteSend}
+        sending={isSending}
+      />
     </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { padding: 24, paddingTop: 60, gap: 16 },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 22,
     fontWeight: '600',

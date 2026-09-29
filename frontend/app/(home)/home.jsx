@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, ScrollView, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCountdownStore } from '../../store/useCountdownStore';
 import { usePairingStore } from '../../store/usePairingStore';
+import { useNoteStore } from '../../store/useNoteStore';
 import ScreenBackground from '../../components/ScreenBackground';
 import CountdownCard from '../../components/Countdown/CountdownCard';
 import AddCountdownButton from '../../components/Countdown/AddCountdownButton';
+import NoteCard from '../../components/Home/NoteCard';
 
 export default function Home() {
   const { authUser } = useAuthStore();
   const { countdown, getCountdown, createCountdown } = useCountdownStore();
   const { paired, getStatus } = usePairingStore();
+  const { notes, getNotes, dismissNote } = useNoteStore();
 
   useEffect(() => {
     getStatus();
@@ -20,6 +23,7 @@ export default function Home() {
   useEffect(() => {
     if (paired) {
       getCountdown();
+      getNotes();
     }
   }, [paired]);
 
@@ -35,22 +39,33 @@ export default function Home() {
   };
 
   return (
-    <ScreenBackground style={styles.container}>
-      <Text style={styles.greeting}>
-        Welcome back{authUser?.username ? `, ${authUser.username}` : ''}
-      </Text>
+    <ScreenBackground>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.greeting}>
+          Welcome back{authUser?.username ? `, ${authUser.username}` : ''}
+        </Text>
 
-      {countdown ? (
-        <CountdownCard countdown={countdown} />
-      ) : (
-        <AddCountdownButton onPress={handleAddCountdown} />
-      )}
+        {countdown ? (
+          <CountdownCard countdown={countdown} />
+        ) : (
+          <AddCountdownButton onPress={handleAddCountdown} />
+        )}
+
+        {notes.map((note) => (
+          <NoteCard key={note.id} note={note} onDismiss={() => dismissNote(note.id)} />
+        ))}
+      </ScrollView>
     </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, paddingTop: 60, gap: 20 },
+  scroll: { flex: 1 },
+  content: { padding: 24, paddingTop: 60, paddingBottom: 32, gap: 20 },
   greeting: {
     fontSize: 22,
     fontWeight: '600',

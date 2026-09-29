@@ -17,11 +17,13 @@ model User {
   email            String    @unique
   password         String
   createdAt        DateTime  @default(now())
+  pushToken        String?
 
   coupleAsUser1    Couple?   @relation("User1Couple")
   coupleAsUser2    Couple?   @relation("User2Couple")
 
   invite           PairingInvite? @relation("InviteOwner")
+  notesSent        Note[]    @relation("NoteSender")
 }
 
 enum CoupleStatus {
@@ -41,6 +43,7 @@ model Couple {
   unpairedBy  Int?
 
   countdown   Countdown?
+  notes       Note[]
 }
 
 model Countdown {
@@ -51,6 +54,17 @@ model Countdown {
   targetDate  DateTime
   createdAt   DateTime @default(now())
   createdBy   String
+}
+
+model Note {
+  id          String   @id @default(uuid())
+  coupleId    String
+  couple      Couple   @relation(fields: [coupleId], references: [id])
+  senderId    Int
+  sender      User     @relation("NoteSender", fields: [senderId], references: [id])
+  text        String
+  createdAt   DateTime @default(now())
+  dismissedAt DateTime?
 }
 
 model PairingInvite {
