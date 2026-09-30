@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, ScrollView, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -8,13 +8,16 @@ import { useNoteStore } from '../../store/useNoteStore';
 import ScreenBackground from '../../components/ScreenBackground';
 import CountdownCard from '../../components/Countdown/CountdownCard';
 import AddCountdownButton from '../../components/Countdown/AddCountdownButton';
+import SetCountdownModal from '../../components/Countdown/SetCountdownModal';
 import NoteCard from '../../components/Home/NoteCard';
 
 export default function Home() {
   const { authUser } = useAuthStore();
-  const { countdown, getCountdown, createCountdown } = useCountdownStore();
+  const { countdown, getCountdown, createCountdown, deleteCountdown, isCreating } = useCountdownStore();
   const { paired, getStatus } = usePairingStore();
   const { notes, getNotes, dismissNote } = useNoteStore();
+
+  const [countdownModalVisible, setCountdownModalVisible] = useState(false);
 
   useEffect(() => {
     getStatus();
@@ -32,10 +35,16 @@ export default function Home() {
       Toast.show({ type: 'error', text1: 'Unable to add countdown, find a partner first' });
       return;
     }
-    // placeholder for now — next step is a date picker modal
-    createCountdown({
-      targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    setCountdownModalVisible(true);
+  };
+
+  const handleSetCountdown = async (durationMs) => {
+    const success = await createCountdown({
+      targetDate: new Date(Date.now() + durationMs).toISOString(),
     });
+    if (success) {
+      setCountdownModalVisible(false);
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ export default function Home() {
         </Text>
 
         {countdown ? (
-          <CountdownCard countdown={countdown} />
+          <CountdownCard countdown={countdown} onDelete={deleteCountdown} />
         ) : (
           <AddCountdownButton onPress={handleAddCountdown} />
         )}
@@ -59,6 +68,13 @@ export default function Home() {
           <NoteCard key={note.id} note={note} onDismiss={() => dismissNote(note.id)} />
         ))}
       </ScrollView>
+
+      <SetCountdownModal
+        visible={countdownModalVisible}
+        onClose={() => setCountdownModalVisible(false)}
+        onSet={handleSetCountdown}
+        setting={isCreating}
+      />
     </ScreenBackground>
   );
 }

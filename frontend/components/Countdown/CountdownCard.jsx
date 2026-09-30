@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function CountdownCard({ countdown }) {
+export default function CountdownCard({ countdown, onDelete }) {
   const { targetDate, createdAt, title } = countdown;
 
   const target = new Date(targetDate).getTime();
@@ -15,7 +16,12 @@ export default function CountdownCard({ countdown }) {
 
   return (
     <View style={styles.card}>
-      {title ? <Text style={styles.title}>{title}</Text> : null}
+      <View style={styles.header}>
+        {title ? <Text style={styles.title}>{title}</Text> : <View />}
+        <TouchableOpacity onPress={onDelete} hitSlop={8}>
+          <Ionicons name="close" size={18} color="#8a8a8a" />
+        </TouchableOpacity>
+      </View>
 
       <Text style={styles.days}>
         {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'}
@@ -37,9 +43,16 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: 'rgba(255,255,255,0.85)',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 8,
+  },
   title: {
     fontSize: 13,
     color: '#8a8a8a',
+    flex: 1,
   },
   days: {
     fontSize: 28,
