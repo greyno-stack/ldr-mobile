@@ -45,6 +45,10 @@ export default function Partner() {
     setNoteModalVisible(true);
   };
 
+  const handleSendGameRequest = () => {
+    Toast.show({ type: 'info', text1: 'Coming soon', text2: 'Game requests aren\'t wired up yet' });
+  };
+
   const handleNoteSend = async (text) => {
     const success = await sendNote(text);
     if (success) {
@@ -80,6 +84,12 @@ export default function Partner() {
             title="Send a note"
             description="Share a quick thought or message"
             onPress={handleSendNote}
+          />
+          <ActionCard
+            icon="game-controller-outline"
+            title="Send a game request"
+            description="Challenge your partner to a game"
+            onPress={handleSendGameRequest}
           />
         </View>
       ) : (
