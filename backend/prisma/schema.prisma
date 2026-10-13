@@ -67,6 +67,18 @@ model Note {
   dismissedAt DateTime?
 }
 
+model PendingSignup {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  username   String
+  password   String
+  codeHash   String
+  attempts   Int      @default(0)
+  expiresAt  DateTime
+  lastSentAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+}
+
 model PairingInvite {
   id          String   @id @default(uuid())
   code        String   @unique

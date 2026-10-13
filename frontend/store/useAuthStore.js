@@ -16,6 +16,8 @@ const persistAuthUser = (authUser) => {
 export const useAuthStore = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
+    isVerifying: false,
+    isResending: false,
     isLoggingIn: false,
     isUpdatingProfile: false,
     isCheckingAuth: true,
@@ -45,23 +47,20 @@ export const useAuthStore = create((set, get) => ({
         set({ isCheckingAuth: false });
     },
 
+    // Starts email verification; the account is only created once verifyEmail succeeds.
     signup: async(data) => {
         set({isSigningUp: true});
         try {
-            const res = await axiosInstance.post("/auth/signup", data);
-            setAuthToken(res.data.token);
-            persistAuthUser(res.data);
-            set({authUser: res.data});
-            console.log("Signup successful:", res.data);
+            await axiosInstance.post("/auth/signup", data);
+            return true;
         }
         catch (error) {
-            const status = error?.response?.status;
             const message =
               error?.response?.data?.error ||
               error?.response?.data?.message ||
               error?.message ||
               "Signup failed";
-            if (status === 409 || message.toLowerCase().includes("already")) {
+            if (message === "User already exists") {
                 Toast.show({
                 type: "error",
                 text1: "Email already in use",
@@ -71,9 +70,53 @@ export const useAuthStore = create((set, get) => ({
                 Toast.show({ type: "error", text1: message });
             }
             console.error("Error signing up:", error);
+            return false;
         }
         finally {
             set({isSigningUp: false});
+        }
+    },
+
+    verifyEmail: async({ email, code }) => {
+        set({ isVerifying: true });
+        try {
+            const res = await axiosInstance.post("/auth/verify-email", { email, code });
+            setAuthToken(res.data.token);
+            persistAuthUser(res.data);
+            set({ authUser: res.data });
+            return true;
+        }
+        catch (error) {
+            const message =
+              error?.response?.data?.error ||
+              error?.message ||
+              "Verification failed";
+            Toast.show({ type: "error", text1: message });
+            return false;
+        }
+        finally {
+            set({ isVerifying: false });
+        }
+    },
+
+    // Resolves to { success, retryAfterSeconds? } so the screen can sync its cooldown timer.
+    resendCode: async(email) => {
+        set({ isResending: true });
+        try {
+            await axiosInstance.post("/auth/resend-code", { email });
+            Toast.show({ type: "success", text1: "New code sent" });
+            return { success: true };
+        }
+        catch (error) {
+            const message =
+              error?.response?.data?.error ||
+              error?.message ||
+              "Couldn't resend the code";
+            Toast.show({ type: "error", text1: message });
+            return { success: false, retryAfterSeconds: error?.response?.data?.retryAfterSeconds };
+        }
+        finally {
+            set({ isResending: false });
         }
     },
 

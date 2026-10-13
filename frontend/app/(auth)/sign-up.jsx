@@ -15,13 +15,17 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (password !== confirmPassword) {
       Toast.show({ type: 'error', text1: "Passwords don't match" });
       return;
     }
 
-    signup({ username: fullName, email, password });
+    const normalizedEmail = email.trim().toLowerCase();
+    const started = await signup({ username: fullName, email: normalizedEmail, password });
+    if (started) {
+      router.push({ pathname: '/verify-email', params: { email: normalizedEmail } });
+    }
   };
 
   return (
