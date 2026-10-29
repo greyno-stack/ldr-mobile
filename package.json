@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "pnpm --parallel --filter \"./apps/*\" dev",
     "dev:api": "pnpm --filter @ldr/api dev",
-    "dev:mobile": "pnpm --filter @ldr/mobile dev"
+    "dev:mobile": "pnpm --filter @ldr/mobile dev",
+    "lint": "pnpm --filter @ldr/mobile lint",
+    "check": "pnpm lint && pnpm --filter @ldr/api check"
   }
 }

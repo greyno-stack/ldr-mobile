@@ -1,12 +1,20 @@
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+const REFRESH_INTERVAL_MS = 60 * 1000;
+
 export default function CountdownCard({ countdown, onDelete }) {
   const { targetDate, createdAt, title } = countdown;
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), REFRESH_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, []);
 
   const target = new Date(targetDate).getTime();
   const created = new Date(createdAt).getTime();
-  const now = Date.now();
 
   const daysRemaining = Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
 
