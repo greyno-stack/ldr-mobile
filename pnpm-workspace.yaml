@@ -1,0 +1,10 @@
+packages:
+  - 'apps/*'
+
+# React Native libraries resolve most reliably with a flat node_modules layout.
+nodeLinker: hoisted
+
+# pnpm 10 blocks dependency install scripts by default; Prisma needs its postinstall.
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - prisma

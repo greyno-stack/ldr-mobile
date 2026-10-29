@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@ldr/mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
@@ -41,6 +41,7 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
+    "dev": "expo start",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",

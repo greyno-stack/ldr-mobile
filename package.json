@@ -1,0 +1,13 @@
+{
+  "name": "ldr-mobile",
+  "private": true,
+  "packageManager": "pnpm@10.34.7",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "dev:api": "pnpm --filter @ldr/api dev",
+    "dev:mobile": "pnpm --filter @ldr/mobile dev"
+  }
+}
